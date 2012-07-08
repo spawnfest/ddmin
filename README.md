@@ -2,7 +2,7 @@ Minimizing Delta Debugging Algorithm
 ====================================
 
 Erlang implementation of the minimizing delta debugging algorithm (ddmin) 
-as described in [Simplifying and Isolating Failure-Inducing Input](http://www.st.cs.uni-saarland.de/papers/tse2002/tse2002.pdf)
+as described in [Simplifying and Isolating Failure-Inducing Input](http://www.st.cs.uni-saarland.de/papers/tse2002/tse2002.pdf) (PDF)
 from the fine folks of the software engineering chair of [Saarland University](http://www.st.cs.uni-saarland.de/).
 
 No worries, you don't have to read the paper to understand what's going on.
@@ -12,14 +12,14 @@ What does it do?
 
 In a nutshell, the delta debugging algorithm is supposed to find the minimal difference 
 between a passing and a failing test case for a given input. That means having a failing test for a given input 
-the DD algorithm will produce a *minimal* test case to reproduce the error.
+the ddmin will produce a *minimal* test case to reproduce the error.
 
 
 How does it do it?
 ------------------
 
-The DD algorithm uses a devide an conquer approach of splitting the input data into smaller chunks and checks if 
-a small reproduces the error the same way. Ultimately DD is supposed to find the minimal input to reproduce the error.
+The ddmin uses a devide and conquer approach of splitting input data into smaller chunks and checks if 
+a smaller input reproduces the error the same way as a larger does. Ultimately ddmin is supposed to find the minimal input to reproduce the error.
 
 Let's look at an example:
 
@@ -28,7 +28,7 @@ Let's look at an example:
     foo([]) -> done.
 
 This inherently useless function shall serve us for demonstartion purposes. For the input `[1,2,3,4,5,6,7,8]` 
-the DD algorithm proceeds the following way by applying `foo` on different input sets:
+ddmin proceeds the following way by applying `foo` on different input sets:
 
       step | delta | test case                | test
     ---------------|--------------------------------
@@ -42,6 +42,26 @@ the DD algorithm proceeds the following way by applying `foo` on different input
     ------------------------------------------------
     result |                           [7] 
 
+
+In order to run ddmin you only have to implement a test function. The test function for the `foo` case could look like:
+
+    TestFun = fun(Circumstances) ->
+                try
+                  foo(Circumstances),
+                  pass
+                catch _:expected_error -> fail;
+                      _:_ -> unresolved
+                end
+              end.
+
+During execution ddmin applies `TestFun` to each delta and checks for the smallest input. 
+Furthermore, ddmin resizes the chunks in case it cannot find a smaller failing test case.
+In the worst case almost all combination of chunks will be exercised but in the best case the 
+overall complexity is that of a binary search.
+
+Run ddmin like this:
+
+    > ddmin:ddmin(TestFun, [1,2,3,4,5,6,7,8]).
 
 How is that different from what QuickCheck/PropEr do?
 -----------------------------------------------------
@@ -58,8 +78,3 @@ Applying the delta debugging approach lets you find a minimal test case that mak
 hence simplifying the debugging work required to fix the cause of the error. 
 Furthermore, the minimal test case can help to improve the quickcheck generators and properties you have defined so far.
 
-
-How can I use it?
------------------
-
-When you observe an error 
