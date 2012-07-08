@@ -4,11 +4,20 @@
 
 -export([ddmin/2]).
 
+%% @doc A cirumstance can be any input data to a function or message to a process.
+%%      It is up to the user how to cut circumstances, e.g. into text, tuples, numbers,
+%%      HTML/XML tags, other structured input etc.
 -type circumstance() :: term().
+
+%% @doc A test function must accept a list of circumstances and returns:
+%%      fail - with the given (sub)set of circumstances the test reproduces the expected error
+%%      pass - with the given (sub)set of circumstances does not reproduce the expected error,
+%%             the test passes
+%%      unresolved - with the given circumstances the test produced an unexpected error 
 -type test() :: fun(([circumstance()]) -> pass | fail | unresolved).
 
 -spec ddmin(test(), [circumstance()]) -> [circumstance()].
-ddmin(Test, Circumstances) when is_list(Circumstances) ->
+ddmin(Test, Circumstances) when is_function(Test, 1), is_list(Circumstances) ->
   %% Test function must fulfill the following preconditions
   pass = Test([]),
   fail = Test(Circumstances),  
@@ -47,8 +56,9 @@ split_test() ->
   ?assertEqual([[1,2,3,4,5],[6,7,8,9,10]], split(lists:seq(1,10), 5)),
   ?assertEqual([[1,2,3],[4,5,6],[7,8,9],[10,11]], split(lists:seq(1,11), 3)).
 
+
 foo([6,7|_]) -> throw(expected_error);
-foo([H|T]) -> foo(T);
+foo([_|T]) -> foo(T);
 foo([]) -> done.
 
 foo_test() ->
@@ -61,11 +71,12 @@ foo_test() ->
             _:_ -> unresolved
       end
     end,
+  % test checks if ddmin can find the minimum input for foo to reproduce the expected error
   ?assertEqual([6,7], ddmin(Test, [1,2,3,4,5,6,7,8,9,10])).
 
 
 bar([2|_]) -> throw(expected_error);
-bar([H|T]) -> bar(T);
+bar([_|T]) -> bar(T);
 bar([]) -> done.
 
 bar_test() ->
@@ -78,6 +89,7 @@ bar_test() ->
             _:_ -> unresolved
       end
     end,
+  % variation of foo_test with smaller output
   ?assertEqual([2], ddmin(Test, [1,2,3,4,5,6,7,8,9,10,11])).
 
 
