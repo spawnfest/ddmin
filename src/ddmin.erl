@@ -1,5 +1,4 @@
 %% @doc Minimizing Delta Debugging Algorithm
-%% 
 -module(ddmin).
 
 -export([ddmin/2]).
@@ -14,7 +13,7 @@
 %%      pass - with the given (sub)set of circumstances does not reproduce the expected error,
 %%             the test passes
 %%      unresolved - with the given circumstances the test produced an unexpected error 
--type test() :: fun(([circumstance()]) -> pass | fail | unresolved).
+-type test() :: fun(([circumstance()] | []) -> pass | fail | unresolved).
 
 -spec ddmin(test(), [circumstance()]) -> [circumstance()].
 ddmin(Test, Circumstances) when is_function(Test, 1), is_list(Circumstances) ->
@@ -111,7 +110,7 @@ foo_loop_test() ->
         [Pid ! Circumstance || Circumstance <- Circumstances],
         receive    %% wait for expected error to happen
           {'DOWN', _, _, _, {expected_error, _}} -> fail;
-          {'DOWN', _, _ ,_, normal} -> pass;
+          {'DOWN', _, _, _, normal} -> pass;
           _ -> unresolved
         end
     end,
