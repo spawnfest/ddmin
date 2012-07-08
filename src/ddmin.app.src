@@ -1,0 +1,9 @@
+{application, ddmin,
+ [
+  {description, "Minimizing Delta Debugging Algorithm"},
+  {vsn, "0.0.1"},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+ ]}.
