@@ -57,6 +57,11 @@ In order to run ddmin you only have to implement a test function. The test funct
               end.
 
 During execution ddmin applies `TestFun` to each delta seeking the smallest failing input. 
+Note that the test function must have the following type:
+
+    -type circumstance() :: term().
+    -type test() :: fun(([circumstance()] | []) -> pass | fail | unresolved).
+
 Furthermore, ddmin resizes the chunks in case it cannot find a smaller failing test case.
 In the worst case almost all combination of chunks will be exercised but in the best case the 
 overall complexity is that of a binary search.
