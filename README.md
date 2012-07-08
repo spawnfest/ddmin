@@ -62,6 +62,8 @@ Note that the test function must have the following type:
     -type circumstance() :: term().
     -type test() :: fun(([circumstance()] | []) -> pass | fail | unresolved).
 
+The `unresolved` return value helps to determine cases where an unexpected error occurred.
+
 Furthermore, ddmin resizes the chunks in case it cannot find a smaller failing test case.
 In the worst case almost all combination of chunks will be exercised but in the best case the 
 overall complexity is that of a binary search.
@@ -73,15 +75,19 @@ Run ddmin like this:
 How is that different from what QuickCheck/PropEr does?
 --------------------------------------------------------
 
-It's not that different. The quickcheck approach lets you write generators for your input data and 
-automatically reduces this generated data to find minimal counterexamples that fail your properties. 
-But what if your generators were not strong enough to generate a failing case that occurred in production? 
+It's not that different. The quickcheck approach lets you write generators for input data and 
+automatically reduces this generated data to find minimal counterexamples that fail the properties
+you have defined. For the quickcheck approach you need a clear understanding how to model 
+the inner workings of what you want to test. 
 
-You can use the delta debugging approach on any input data that you can chunk, including: 
+Delta debugging allows a more exploratory approach. 
+You can use delta debugging on any input data that you can chunk, including: 
 
-* plain text,
-* HTML/XML tags,
+* plain text (e.g. lines, words, characters),
+* structured data like HTML/XML tags, YAML, binary formats,
 * messages to a certain process collected from a trace to facilitate a record-replay approach.
+
+It remains up to the user to find a reasonable chunking method for input data.
 
 Furthermore, a minimal test case can help to improve the quickcheck generators and properties you have defined so far.
 

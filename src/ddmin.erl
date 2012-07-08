@@ -15,6 +15,8 @@
 %%      unresolved - with the given circumstances the test produced an unexpected error 
 -type test() :: fun(([circumstance()] | []) -> pass | fail | unresolved).
 
+%% @doc The ddmin function. Takes a test function and 
+%%      a list of possible inputs for the test function.
 -spec ddmin(test(), [circumstance()]) -> [circumstance()].
 ddmin(Test, Circumstances) when is_function(Test, 1), is_list(Circumstances) ->
   %% Test function must fulfill the following preconditions
