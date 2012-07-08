@@ -90,7 +90,7 @@ bar_test() ->
             _:_ -> unresolved
       end
     end,
-  % variation of foo_test with smaller output
+  % variation of foo_test 
   ?assertEqual([2], ddmin(Test, [1,2,3,4,5,6,7,8,9,10,11])).
 
 

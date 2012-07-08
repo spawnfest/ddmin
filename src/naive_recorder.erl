@@ -16,7 +16,7 @@ record(Pid) when is_pid(Pid) ->
   dbg:stop_clear(),
   Tid = ets:new(?MODULE, [ordered_set, public]),
   dbg:tracer(process, {
-      fun(Msg={trace_ts,_,'receive', ReceivedMsg, TS}, Tab) ->
+      fun({trace_ts,_,'receive', ReceivedMsg, TS}, Tab) ->
           ets:insert(Tab, {TS, ReceivedMsg}),
           Tab;
          (_, Tab) -> Tab
