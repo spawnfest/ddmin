@@ -30,7 +30,7 @@ Let's look at an example:
     foo([]) -> done.
 
 This inherently useless function shall serve us for demonstration purposes. For the input `[1,2,3,4,5,6,7,8]` 
-ddmin proceeds the following way by applying `foo` on different input sets:
+ddmin proceeds the following way by applying `foo` on different input configurations:
 
       step | delta | test case                | test
     ------------------------------------------------
@@ -71,6 +71,7 @@ overall complexity is that of a binary search.
 Run ddmin like this:
 
     > ddmin:ddmin(TestFun, [1,2,3,4,5,6,7,8]).
+    [7]
 
 How is that different from what QuickCheck/PropEr does?
 --------------------------------------------------------
@@ -85,7 +86,8 @@ You can use delta debugging on any input data that you can chunk, including:
 
 * plain text (e.g. lines, words, characters),
 * structured data like HTML/XML tags, YAML, binary formats,
-* messages to a certain process collected from a trace to facilitate a record-replay approach.
+* messages to a certain process collected from a trace to facilitate a record-replay approach. 
+  This approach is show-cased with a simple test (see `test/record_replay_test.erl`).
 
 It remains up to the user to find a reasonable chunking method for input data.
 
