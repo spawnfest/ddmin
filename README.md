@@ -12,7 +12,8 @@ What does it do?
 
 In a nutshell, the delta debugging algorithm is supposed to find the minimal difference 
 between a passing and a failing test case for a given input. That means having a failing test for a given input 
-the ddmin will produce a *minimal* test case to reproduce the error.
+the ddmin will produce a *minimal* test case to reproduce the error 
+hence, simplifying the debugging work required to fix the cause of the error. 
 
 
 How does it do it?
@@ -54,7 +55,7 @@ In order to run ddmin you only have to implement a test function. The test funct
                 end
               end.
 
-During execution ddmin applies `TestFun` to each delta and checks for the smallest input. 
+During execution ddmin applies `TestFun` to each delta seeking for the smallest failing input. 
 Furthermore, ddmin resizes the chunks in case it cannot find a smaller failing test case.
 In the worst case almost all combination of chunks will be exercised but in the best case the 
 overall complexity is that of a binary search.
@@ -70,11 +71,13 @@ It's not that different. The quickcheck approach lets you write generators for y
 automatically reduces this generated data to find minimal counterexamples that fail your properties. 
 But what if your generators were not strong enough to generate a failing case that occurred in production? 
 
-You can use the delta debugging approach on input data that was not generated, e.g. collected from a trace or 
-input data you received from a third party source. 
+You can use the delta debugging approach on any input data that you can chunk, e.g. 
 
-Imagine you implemented a parser and the parser fails on a large input file making it hard to find the root cause of the problem. 
-Applying the delta debugging approach lets you find a minimal test case that makes your parser fail, 
-hence simplifying the debugging work required to fix the cause of the error. 
-Furthermore, the minimal test case can help to improve the quickcheck generators and properties you have defined so far.
+* plain text,
+* HTML/XML tags,
+* messages to a certain process collected from a trace to facilitate a record-replay approach,
+* etc.
+
+Furthermore, a minimal test case can help to improve the quickcheck generators and properties you have defined so far.
+
 
