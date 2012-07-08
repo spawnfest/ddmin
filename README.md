@@ -23,24 +23,24 @@ a small reproduces the error the same way. Ultimately DD is supposed to find the
 
 Let's look at an example:
 
-> foo([7|_]) -> throw(expected_error);
-> foo([_|T]) -> foo(T);
-> foo([]) -> done.
+    foo([7|_]) -> throw(expected_error);
+    foo([_|T]) -> foo(T);
+    foo([]) -> done.
 
 This inherently useless function shall serve us for demonstartion purposes. For the input `[1,2,3,4,5,6,7,8]` 
 the DD algorithm proceeds the following way by applying `foo` on different input sets:
 
->   step | delta | test case                | test
-> ---------------|--------------------------------
->    1   |   1   | [1, 2, 3, 4] .  .  .  .  | pass
->    2   |   2   |  .  .  .  . [5, 6, 7, 8] | fail
-> ---------------|--------------------------------
->    3   |   1   |  .  .  .  . [5, 6] .  .  | pass
->    4   |   2   |  .  .  .  .  .  . [7, 8] | fail
-> ---------------|--------------------------------
->    5   |   1   |  .  .  .  .  .  . [7] .  | fail  (minimal input)
-> ------------------------------------------------
-> result |                           [7] 
+      step | delta | test case                | test
+    ---------------|--------------------------------
+       1   |   1   | [1, 2, 3, 4] .  .  .  .  | pass
+       2   |   2   |  .  .  .  . [5, 6, 7, 8] | fail
+    ---------------|--------------------------------
+       3   |   1   |  .  .  .  . [5, 6] .  .  | pass
+       4   |   2   |  .  .  .  .  .  . [7, 8] | fail
+    ---------------|--------------------------------
+       5   |   1   |  .  .  .  .  .  . [7] .  | fail  (minimal input)
+    ------------------------------------------------
+    result |                           [7] 
 
 
 How is that different from what QuickCheck/PropEr do?
