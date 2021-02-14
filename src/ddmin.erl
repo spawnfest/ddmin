@@ -3,7 +3,7 @@
 
 -export([ddmin/2]).
 
-%% @doc A cirumstance can be any input data to a function or message to a process.
+%% @doc A circumstance can be any input data to a function or message to a process.
 %%      It is up to the user how to cut circumstances, e.g. into text, tuples, numbers,
 %%      HTML/XML tags, other structured input etc.
 -type circumstance() :: term().

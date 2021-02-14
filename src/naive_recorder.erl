@@ -1,6 +1,6 @@
 %% @doc Naive recorder of messages to a process using dbg tracer.
 %%      Records all received messages to a pid and 
-%%      stores them ordered by arrivial in an ETS.
+%%      stores them ordered by arrival in an ETS.
 -module(naive_recorder).
 
 -export([ record/1
@@ -45,7 +45,7 @@ foo_loop() ->
   receive 
     {hello,_} -> foo_loop();
     bye -> ok;
-    _ -> throw(exepected_error)
+    _ -> throw(expected_error)
   end.
 
 simple_test() ->
