@@ -45,7 +45,7 @@ foo_loop() ->
   receive 
     {hello,_} -> foo_loop();
     bye -> ok;
-    _ -> throw(exepected_error)
+    _ -> throw(expected_error)
   end.
 
 simple_test() ->
